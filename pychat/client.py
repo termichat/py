@@ -2,7 +2,8 @@ import asyncio
 import sys
 import websockets
 import time
-
+from . import notifypy
+import json
 
 class BColors:
     HEADER = '\033[95m'
@@ -49,5 +50,17 @@ class ServerConnect:
     async def hello(self):
         uri = f"ws://{self.url}/{self.nickname}"
         async with websockets.connect(uri) as self.websocket:
-            async for message in self.websocket:
-                print(message)
+            async for messg in self.websocket:
+                formatted_messg = messg.replace("\'", "\"")
+
+                message = json.loads(formatted_messg)
+                print(f"{BColors.BOLD}{message['usr']}:{BColors.ENDC}", message['msg'])
+
+                notification = notifypy.Notify()
+                notification.title = f"New message from {message['usr']}"
+                notification.message = message['msg']
+                notification.send()
+
+
+
+
