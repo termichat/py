@@ -21,14 +21,18 @@ class BColors:
 async def handle_connections(websocket, path):
     # Register.
     newPath = path.replace('/', '')
-    await websocket.send(f'Hello. Welcome {newPath}')
+    await websocket.send(str({"usr": newPath, "msg": "You have successfully connected!"}))
     connected.add(websocket)
     try:
         async for message in websocket:
             print(message)
             for w in connected:
                 if not w == websocket:
-                    await w.send(f"{BColors.BOLD}{newPath}:{BColors.ENDC} {message}")
+                    msg = {
+                        "usr": newPath,
+                        "msg": message
+                    }
+                    await w.send(str(msg))
     finally:
         # Unregister.
         connected.remove(websocket)
