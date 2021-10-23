@@ -56,7 +56,7 @@ class ServerConnect:
                 message = json.loads(formatted_messg)
                 print(f"{BColors.BOLD}{message['usr']}:{BColors.ENDC}", message['msg'])
 
-                notification = notifypy.Notify()
+                notification = notifypy.Notify(default_application_name="PyChat")
                 notification.title = f"New message from {message['usr']}"
                 notification.message = message['msg']
                 notification.send()
